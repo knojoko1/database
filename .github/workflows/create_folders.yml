@@ -1,0 +1,27 @@
+name: Auto-Create Database Repository Folders
+
+on:
+  push:
+    branches: [ main, master ]
+
+# Grants GitHub Actions permission to push changes back to the repository
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create directories and .gitkeep
+        run: |
+          mkdir -p sql schemas migrations nosql projects
+          touch sql/.gitkeep schemas/.gitkeep migrations/.gitkeep nosql/.gitkeep projects/.gitkeep
+
+      - name: Commit and push if changes exist
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-generated database repository folder structure from workflow"
+          branch: main
